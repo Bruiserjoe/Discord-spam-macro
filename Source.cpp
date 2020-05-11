@@ -74,18 +74,6 @@ void spam(char in[1000]) {
 	enter();
 
 }
-//Gives color in decimal form
-void getColor() {
-	LPCSTR windowname1 = "Discord (32 bit)";
-	HWND win = FindWindow(NULL, windowname1);
-	POINT input;
-	HDC dci = GetDC(win);
-	GetCursorPos(&input);
-	ScreenToClient(win, &input);
-	COLORREF color = GetPixel(dci, input.x, input.y);
-	std::cout << color << std::endl;
-	Sleep(1000);
-}
 //Sets cursor position
 void setTxb() {
 	std::cout << "Move cursor to textbox?Y/N";
@@ -100,6 +88,14 @@ void setTxb() {
 		ReleaseDC(win, dci);
 	}
 }
+//Spamming thread
+void spamit() {
+	while (!exitf) {
+		setMouse();
+		spam(input);
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	}
+}
 int main() {
 	setTxb();
 	std::cin.sync();
@@ -108,17 +104,15 @@ int main() {
 	std::cin.sync();
 	std::cout << input << std::endl;
 	std::cout << "Starting spam" << std::endl;
+	std::thread spammer(spamit);
 	while (!exitf) {
-		
-			setMouse();
-		
 		if (GetAsyncKeyState(VK_DOWN)) {
 				exitf = true;
 		}
 		
-		Sleep(500);
-		spam(input);
+		
 			
 	}
+	spammer.join();
 	return 0;
 }
