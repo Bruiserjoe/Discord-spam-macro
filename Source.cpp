@@ -1,12 +1,14 @@
 #include "header.h"
 char input[1000];
 bool exitf = false;
+POINT txb = { 998, 859 };
 char out[17] = { ':', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '"', '~', '<', '>' };
 //Sets the mouse position
 void setMouse() {
 	LPCSTR windowname = "Discord (32 bit)";
 	HWND dWND = FindWindow(NULL, windowname);
-	SetCursorPos(998, 859);
+	HDC wdc = GetDC(dWND);
+	SetCursorPos(txb.x, txb.y);
 	INPUT input1 = { 0 };
 	input1.type = INPUT_MOUSE;
 	input1.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
@@ -72,16 +74,48 @@ void spam(char in[1000]) {
 	enter();
 
 }
+//Gives color in decimal form
+void getColor() {
+	LPCSTR windowname1 = "Discord (32 bit)";
+	HWND win = FindWindow(NULL, windowname1);
+	POINT input;
+	HDC dci = GetDC(win);
+	GetCursorPos(&input);
+	ScreenToClient(win, &input);
+	COLORREF color = GetPixel(dci, input.x, input.y);
+	std::cout << color << std::endl;
+	Sleep(1000);
+}
+//Sets cursor position
+void setTxb() {
+	std::cout << "Move cursor to textbox?Y/N";
+	std::cin.getline(input, 10);
+	if (input[0] == 'y' || input[0] == 'Y') {
+		LPCSTR windowname1 = "Discord (32 bit)";
+		HWND win = FindWindow(NULL, windowname1);
+		HDC dci = GetDC(win);
+		GetCursorPos(&txb);
+		ScreenToClient(win, &txb);
+		std::cout << "X: " << txb.x << "Y:" << txb.y << std::endl;
+		ReleaseDC(win, dci);
+	}
+}
 int main() {
+	setTxb();
+	std::cin.sync();
 	std::cout << "Input text you want to spam: ";
 	std::cin.getline(input, 1000);
+	std::cin.sync();
 	std::cout << input << std::endl;
 	std::cout << "Starting spam" << std::endl;
 	while (!exitf) {
-		setMouse();
+		
+			setMouse();
+		
 		if (GetAsyncKeyState(VK_DOWN)) {
 				exitf = true;
 		}
+		
 		Sleep(500);
 		spam(input);
 			

@@ -2,3 +2,9 @@
 #include <iostream>
 #include <string>
 #include <windows.h>
+#include <time.h>
+#include <chrono>
+#include <thread>
+#include <limits>
+#include <ios>      
+#include <algorithm>
