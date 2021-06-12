@@ -89,22 +89,26 @@ void setTxb() {
 	}
 }
 //Spamming thread
-void spamit() {
+void spamit(int sleeptime) {
 	while (!exitf) {
 		setMouse();
 		spam(input);
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleeptime));
 	}
 }
 int main() {
 	setTxb();
+	char line[10];
+	std::cout << "Interval minimum recomended is 500ms: ";
+	std::cin.getline(line, 10);
+	int coold = std::stoi(line);
 	std::cin.sync();
 	std::cout << "Input text you want to spam: ";
 	std::cin.getline(input, 1000);
 	std::cin.sync();
 	std::cout << input << std::endl;
 	std::cout << "Starting spam" << std::endl;
-	std::thread spammer(spamit);
+	std::thread spammer(spamit, coold);
 	while (!exitf) {
 		if (GetAsyncKeyState(VK_DOWN)) {
 				exitf = true;
